@@ -30,7 +30,7 @@
                 max-width: 800px;
                 flex: 1;
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: center;
                 background-image: url('imgs/p.png');
                 background-position: bottom;
@@ -40,10 +40,11 @@
                 color: white;
                 font-size: 80px;
                 -webkit-text-stroke: 3px black;
+                padding-top: 20px;
             }
 
-            #op {
-                background-image: url('imgs/op.png');
+            .op {
+                background-image: url('imgs/op.png') !important;
                 background-position: bottom;
                 background-size: contain;
                 background-repeat: no-repeat;
@@ -56,5 +57,75 @@
             <img class="title" src="imgs/popcat.svg" alt="POPCAT">
             <div class="cat-img" id="p">0</div>
         </div>
+
+        <script>
+            // 計數器初始化
+            let count = 0;
+
+            // 計數器累加 function
+            function incrementCount() {
+                count++;
+                console.log(count);
+            }
+
+            // 用 id 抓取 HTML 元素
+            const catElement = document.getElementById('p');
+            const popSound = new Audio('pops/pop1.mp3');
+            
+            // 預載張嘴圖片
+            const openMouthImg = new Image();
+            openMouthImg.src = 'imgs/op.png';
+
+            // 定時器變數
+            let closeTimeout;
+
+            // 滑鼠按下事件
+            function handleMouseDown() {
+                // 計數器累加
+                incrementCount();
+
+                // 顯示計數器的數字
+                catElement.textContent = count;
+
+                // 切換張嘴圖片 (添加 'op' class)
+                catElement.classList.add('op');
+
+                // 播放音效
+                popSound.currentTime = 0;
+                popSound.play();
+
+                // 清除之前的 timeout
+                if (closeTimeout) {
+                    clearTimeout(closeTimeout);
+                }
+            }
+
+            // 滑鼠放開事件
+            function handleMouseUp() {
+                // 等待 25 毫秒，再切回閉嘴圖片
+                closeTimeout = setTimeout(() => {
+                    catElement.classList.remove('op');
+                }, 25);
+            }
+
+            // 鍵盤按下事件
+            function handleKeyDown(event) {
+                // 任意鍵都觸發
+                handleMouseDown();
+            }
+
+            // 鍵盤放開事件
+            function handleKeyUp(event) {
+                handleMouseUp();
+            }
+
+            // 註冊滑鼠事件
+            catElement.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // 註冊鍵盤事件
+            document.addEventListener('keydown', handleKeyDown);
+            document.addEventListener('keyup', handleKeyUp);
+        </script>
 		</body>
 </html>
